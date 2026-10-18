@@ -3,6 +3,8 @@ import classes from './HomeLayout.module.scss';
 
 import CanvasLines from './CanvasLines.jsx';
 import HomePageRedirectBtn from '../../features/redirect-page-btns/HomePageRedirectBtn.jsx';
+import Table from '../../components/tables/Table.jsx';
+import { HOMEPAGE_INTRO } from '../../_data/home/homePage.js';
 
 const redirctHomePageBtns = [
     {
@@ -34,23 +36,32 @@ export default function HomeLayout() {
         <div className={classes.welcome} ref={container}>
             <CanvasLines containerRef={container} />
 
-            <div className={classes.recommend}>
-                <h2>Hi, 我是 BlissXML 👋</h2>
+            <div className={classes.content}>
+                {/* 左侧预留给后续的翻转图片插件。 */}
+                <div className={classes.gallery} aria-hidden="true" />
 
-                <p>
-                    <span>
-                        在这里，你会看到我的前端学习过程、个人项目和生活点滴。
-                    </span>
-                    <span>学习与热爱，都在这里留下痕迹。</span>
-                </p>
+                <section className={classes.intro} aria-labelledby="home-heading">
+                    <h1 id="home-heading">欢迎访问我的网站💕</h1>
+                    <table className={classes.table}>
+                        <tbody>
+                            {HOMEPAGE_INTRO.map(el => (
+                                <Table th={el.title} td={el.content} key={el.id} />
+                            ))}
+                        </tbody>
+                    </table>
+                    <p className={classes.para}>
+                        <span>✨不骄不躁戒熬夜，破界跨界闯世界。</span>
+                        <span>✨我不相信我无法完成，我知道只是时间的问题。</span>
+                    </p>
 
-                <div className={classes.btns}>
-                    {redirctHomePageBtns.map(el => (
-                        <HomePageRedirectBtn src={el.url} key={el.id}>
-                            {el.title}
-                        </HomePageRedirectBtn>
-                    ))}
-                </div>
+                    <div className={classes.btns}>
+                        {redirctHomePageBtns.map(el => (
+                            <HomePageRedirectBtn src={el.url} key={el.id}>
+                                {el.title}
+                            </HomePageRedirectBtn>
+                        ))}
+                    </div>
+                </section>
             </div>
         </div>
     );

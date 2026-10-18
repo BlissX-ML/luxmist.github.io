@@ -1,43 +1,37 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <link rel="icon" type="image/svg+xml" href="/logo_ico.svg" />
-        <!-- 导入字体 -->
-        <link
-            rel="preload"
-            as="image"
-            href="/images/webp/index.webp"
-            type="image/webp"
-        />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link
-            href="https://fonts.googleapis.com/css2?family=Lilex:ital,wght@0,100..700;1,100..700&family=Ma+Shan+Zheng&display=swap"
-            rel="stylesheet"
-        />
-        <!-- 导入结束 -->
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta
-            name="description"
-            content="个人静态网站，主要用于实践前端工程化、内容渲染系统、数据可视化与交互设计相关能力。"
-        />
-        <title>Soluna</title>
-      <script type="module" crossorigin src="/assets/index-CzhxaCtT.js"></script>
-      <link rel="stylesheet" crossorigin href="/assets/index-RF50VYc2.css">
-    </head>
+	<head>
+		<meta charset="UTF-8" />
+		<link rel="icon" type="image/svg+xml" href="/logo_ico.svg" />
+		<!-- 导入字体 -->
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Lilex:ital,wght@0,100..700;1,100..700&family=Ma+Shan+Zheng&display=swap"
+			rel="stylesheet"
+		/>
+		<!-- 导入结束 -->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta
+			name="description"
+			content="个人静态网站，主要用于实践前端工程化、内容渲染系统、数据可视化与交互设计相关能力。"
+		/>
+		<title>Soluna</title>
+		<script type="module" crossorigin src="/assets/index-CzhxaCtT.js"></script>
+		<link rel="stylesheet" crossorigin href="/assets/index-RF50VYc2.css" />
+	</head>
 
-    <body>
-        <div id="root"></div>
+	<body>
+		<div id="root"></div>
 
-        <!-- 第一步：单独注入全局环境变量（无 type="module"，优先执行） -->
-        <script>
-            // 生产环境可直接替换为后端地址
-            window.__env__ = window.__env__ || {
-                API_BASE_URL: '/api' // 用相对路径，配合 Nginx 反向代理
-            };
-        </script>
+		<!-- 第一步：单独注入全局环境变量（无 type="module"，优先执行） -->
+		<script>
+			// 生产环境可直接替换为后端地址
+			window.__env__ = window.__env__ || {
+				API_BASE_URL: "/api", // 用相对路径，配合 Nginx 反向代理
+			};
+		</script>
 
-        <!-- 第二步：加载主入口文件 -->
-    </body>
+		<!-- 第二步：加载主入口文件 -->
+	</body>
 </html>

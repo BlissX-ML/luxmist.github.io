@@ -27,8 +27,8 @@ export const OBTAINED_CERTIFICATE = [
                 title: 'Meta Front-end Developer 系列课程'
             },
             {
-                category: 'learn-typescript',
-                key: 'learn-typescript',
+                category: 'typescript',
+                key: 'typescript',
                 title: 'Learn Typescript'
             }
         ]

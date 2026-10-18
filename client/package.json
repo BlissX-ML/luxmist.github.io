@@ -8,7 +8,6 @@
         "build": "vite build",
         "lint": "eslint .",
         "preview": "vite preview",
-        "convert:webp": "node src/_utils/node/convert-to-webp.js",
         "convert:pdfToImage": "node src/_utils/node/convert-pdf-to-image.js",
         "convert:scanPublic": "node src/_utils/node/scan-public-files.js",
         "convert:scanPublicImage": "node src/_utils/node/scan-public-webp-image.js"
@@ -17,6 +16,7 @@
         "@reduxjs/toolkit": "^2.8.2",
         "@tanstack/react-query": "^5.85.3",
         "@turf/turf": "^7.3.2",
+        "antd": "^6.6.6",
         "d3": "^7.9.0",
         "echarts": "^6.0.0",
         "embla-carousel-react": "^8.6.0",

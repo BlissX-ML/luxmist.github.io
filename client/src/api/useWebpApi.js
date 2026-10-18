@@ -1,8 +1,9 @@
 import { useGetCertificateChartDataQuery } from '../store/reducer/data.webpApiSlice.js';
 
-export async function webpImagesApi(key, size) {
+export async function webpImagesApi(group, album) {
     try {
-        const url = `/api/data/images/dash-certs?certs=${key}&size=${size}`;
+        const query = new URLSearchParams({ group, album });
+        const url = `/api/data/images?${query}`;
 
         const res = await fetch(url, {
             method: 'GET',

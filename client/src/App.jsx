@@ -1,5 +1,5 @@
 import './App.scss';
-import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, Navigate, Outlet, RouterProvider } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
 
 import Footprint from './pages/footprint-page/Footprint.jsx';
@@ -7,7 +7,6 @@ import About from './pages/about-page/AboutPage.jsx';
 
 import Loading from './components/feedback/Loading.jsx';
 
-import Indexpage from './layouts/index/IndexLayout.jsx';
 import Resources from './pages/resource-share-page/Resources.jsx';
 
 // import MemoSidebarNavigate from './pages/memo-page/MemoSidebarNavigate';
@@ -31,7 +30,7 @@ import CertificatesLayout from './layouts/dashboard/router/certificate/Certifica
 const Homepage = lazy(() => import('./pages/home-page/Homepage.jsx'));
 
 const router = createBrowserRouter([
-    { path: '/', element: <Indexpage /> },
+    { path: '/', element: <Navigate to="/home" replace /> },
     {
         element: <AppLayout />,
         children: [

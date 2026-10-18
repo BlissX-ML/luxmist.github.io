@@ -1,13 +1,14 @@
-import { Router } from 'express';
+import { Router } from "express";
 import {
-    imagesCertsChartController,
-    imagesCertsController
-} from '../controllers/images/imagesControllers.js';
-import { noCacheHandler } from '../middleware/noCacheMiddleware.js';
+  imagesCertsChartController,
+  imagesController,
+  imageFileController,
+} from "../controllers/images/imagesControllers.js";
 
 const router = Router();
 
-router.get('/certs-chart', imagesCertsChartController);
-router.get('/dash-certs', imagesCertsController);
+router.get("/certs-chart", imagesCertsChartController);
+router.get("/file", imageFileController);
+router.get("/", imagesController);
 
 export default router;

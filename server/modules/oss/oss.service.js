@@ -23,6 +23,7 @@ async function getOssClient() {
     try {
         const stsToken = await getValidSTSToken();
         ossClient = new OSS({
+            secure: true,
             region: config.ossRegion,
             bucket: config.ossBucket,
             accessKeyId: stsToken.AccessKeyId,

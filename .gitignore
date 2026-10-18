@@ -14,6 +14,7 @@ lerna-debug.log*
 
 # 依赖（末尾加斜杠，通配所有子目录）
 **/node_modules/
+**/package-lock.json
 
 # 打包结果
 client/dist/

@@ -1,48 +1,99 @@
-// 仅限当前组件的变量
-$priority: 1;
-
 .welcome {
-    position: relative;
-    width: 100%;
-    height: calc(100vh - 5rem);
-    margin: 0 auto;
+	position: relative;
+	width: 100%;
+	min-height: calc(100vh - 5rem);
+	margin: 0 auto;
+	padding: clamp(1.5rem, 4vw, 4rem);
+	box-sizing: border-box;
+	display: flex;
+	align-items: center;
 
-    canvas {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: $priority;
-    }
+	canvas {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		z-index: 0;
+		pointer-events: none;
+	}
 }
 
-.recommend {
-    width: 80%;
-    height: 80%;
-    backdrop-filter: blur(15px);
+.content {
+	position: relative;
+	z-index: 1;
+	width: 100%;
+	max-width: 1200px;
+	margin: 0 auto;
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+	gap: clamp(1.5rem, 4vw, 4rem);
+	align-items: stretch;
+}
 
-    @include position-absolute-layout;
+.gallery {
+	min-width: 0;
+	border-radius: $border-radius-default;
+	background-color: rgba(255, 255, 255, 0.35);
+	backdrop-filter: blur(15px);
+}
 
-    @include flexlayout-default-column;
-    @include flexlayout-center;
-    gap: calc($flex-gap-default * 2);
+.intro {
+	min-width: 0;
+	padding: 1rem 2rem;
+	border-radius: $border-radius-default;
+	background-color: rgba(255, 255, 255, 0.65);
+	backdrop-filter: blur(15px);
+	text-align: left;
+	display: flex;
+	flex-direction: column;
+	gap: 1.5rem;
 
-    z-index: calc($priority + 1);
+	h1 {
+		font-size: clamp(1.6rem, 2.5vw, 2.5rem);
+		line-height: 1.4;
+		text-align: center;
+	}
+}
 
-    h2 {
-        font-size: calc($font-size-md*4.5);
-    }
+.table {
+	width: 100%;
+	border-collapse: collapse;
 
-    p {
-        font-size: $font-size-bg;
+	th {
+		white-space: nowrap;
+		vertical-align: top;
+	}
 
-        @include flexlayout-default-column;
-        gap: $flex-gap-default;
-    }
+	td {
+		overflow-wrap: anywhere;
+	}
+}
+
+.para {
+	display: flex;
+	flex-direction: column;
+	gap: 0.8rem;
+	line-height: 1.8;
 }
 
 .btns {
-    @include flexlayout-default;
-    gap: calc($flex-gap-default * 1.5);
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 1rem;
+
+	> button {
+		width: 100%;
+		min-width: 0;
+	}
+}
+
+@media (max-width: 900px) {
+	.content {
+		gap: 1.5rem;
+	}
+
+	.intro {
+		padding: 1.5rem;
+	}
 }

@@ -42,21 +42,12 @@ export default function CertificatesList({ style, datas }) {
 
     // 处理二级列表的点击 → 控制 carousel 图片滑动
     const handleSecondListBtnClick = async key => {
-        const dataLow = await webpImagesApi(key, 'low');
-        if (!dataLow) {
-            console.error('Failed to fetch low images for key:', key);
+        const images = await webpImagesApi('certificates', key);
+        if (!images) {
+            console.error('Failed to fetch images for key:', key);
             return;
         }
-        console.log('dataLow:', dataLow);
-        handleCarouselItem(dataLow); // 先用小图渲染
-
-        // 再请求大图，替换
-        const dataHigh = await webpImagesApi(key, 'high');
-        if (!dataHigh) {
-            console.error('Failed to fetch high images for key:', key);
-            return;
-        }
-        handleCarouselItem(dataHigh); // 大图加载完后替换
+        handleCarouselItem(images);
     };
 
     return (

@@ -32,6 +32,16 @@ const router = createBrowserRouter([
 		element: <AppLayout />,
 		children: [
 			{
+				path: "/",
+				index: true,
+				element: (
+					<Navigate
+						to="/home"
+						replace
+					/>
+				),
+			},
+			{
 				path: "home",
 				element: <Homepage />,
 			},

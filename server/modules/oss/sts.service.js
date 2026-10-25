@@ -62,7 +62,7 @@ async function getValidSTSToken() {
     } catch (err) {
         stsCredentials = null; // 失败后重置状态，避免下次用错误状态
         stsExpireAt = 0;
-        throw new Error('获取 STS 凭证失败');
+        throw new Error('获取 STS 凭证失败', { cause: err });
     }
 }
 

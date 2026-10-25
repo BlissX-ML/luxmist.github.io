@@ -28,6 +28,8 @@ export const IMAGES_PATHS: Record<string, Record<string, ImageAlbum>> = {
 		},
 	},
 	profiles: {
+		logo: { path: "profiles/logo/" },
+		home: { path: "profiles/home/" },
 		avatar: { path: "profiles/avatar/" },
 		personal: { path: "profiles/personal/" },
 	},

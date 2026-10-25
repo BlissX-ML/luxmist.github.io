@@ -1,7 +1,7 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import classes from './SidebarNavList.module.scss';
 
-import { useAppDispatch, useAppSelector } from '../../store/reducer/hooks.js';
+import { useAppDispatch, useAppSelector } from '../../store/reducer/hooks.ts';
 import {
     openSecondaryItems,
     setCurItem,
@@ -9,7 +9,7 @@ import {
 } from '../../store/reducer/dropdownSidebar.js';
 
 import scrollToItem from '../../_utils/browser/scroll-into-view.js';
-import SidebarList from '../../components/sidebar/SidebarList.jsx';
+import SidebarList from '../../ui/sidebar/index.tsx';
 
 // 侧边栏导航列表（可复用）
 export default function SidebarNavList({ categories, startURL }) {

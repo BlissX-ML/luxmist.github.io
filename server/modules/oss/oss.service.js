@@ -42,7 +42,7 @@ async function getOssClient() {
 
         return ossClient;
     } catch (err) {
-        throw new Error('连接 OSS 失败，请检查内部错误信息');
+        throw new Error('连接 OSS 失败，请检查内部错误信息', { cause: err });
     }
 }
 

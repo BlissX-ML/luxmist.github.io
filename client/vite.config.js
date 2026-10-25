@@ -1,4 +1,5 @@
 import { defineConfig } from 'vite';
+import { fileURLToPath, URL } from 'node:url';
 import react from '@vitejs/plugin-react';
 import svgr from 'vite-plugin-svgr'; // 转换 SVG 格式图片为 React 组件
 import { ViteImageOptimizer } from 'vite-plugin-image-optimizer'; // 实现图片压缩，静态打包
@@ -25,7 +26,7 @@ export default defineConfig(() => ({
     ],
     resolve: {
         alias: {
-            '@': '/src/_assets',
+            '@': fileURLToPath(new URL('./src', import.meta.url)),
             '#': '/public'
         }
     },
@@ -33,10 +34,10 @@ export default defineConfig(() => ({
         preprocessorOptions: {
             scss: {
                 additionalData: `
-          @use "@/_scss/_variable.scss" as *; 
-          @use "@/_scss/_layout.scss" as *; 
-          @use "@/_scss/_functions.scss" as *;
-          @use "@/_scss/_fonts.scss" as *;
+          @use "@/_assets/_scss/_variable.scss" as *; 
+          @use "@/_assets/_scss/_layout.scss" as *; 
+          @use "@/_assets/_scss/_functions.scss" as *;
+          @use "@/_assets/_scss/_fonts.scss" as *;
         `,
                 javascriptEnabled: true
             }

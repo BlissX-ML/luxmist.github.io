@@ -3,18 +3,24 @@ import { getOssClient } from '../../modules/oss/oss.service.js';
 
 // GET获取 markdown 文件内容
 export async function getOssMdFiles(prefix) {
-    const client = await getOssClient();
-
     try {
-        // delimiter:'/' → OSS 只列当前层级，不递归进子文件夹
-        const result = await client.list({ prefix, delimiter: '/' });
-        const objects = result.objects || [];
+        const client = await getOssClient();
+        // Omit delimiter to include Markdown in nested category directories.
+        const objects = [];
+        let marker;
+        do {
+            const result = await client.list({ prefix, marker, 'max-keys': 1000 });
+            objects.push(...(result.objects || []).filter(obj => /\.md$/i.test(obj.name)));
+            marker = result.isTruncated ? result.nextMarker : undefined;
+        } while (marker);
 
-        const files = await Promise.all(
-            objects.map(async obj => {
+        const files = [];
+        // Bound parallel downloads to avoid overwhelming OSS for large categories.
+        for (let offset = 0; offset < objects.length; offset += 6) {
+            const batch = await Promise.all(objects.slice(offset, offset + 6).map(async obj => {
                 const res = await client.get(obj.name);
 
-                const fullFileName = obj.name.split('/').pop(); // "myDocument.pdf"
+                const fullFileName = obj.name.split('/').pop();
 
                 const fileContent = res.content.toString('utf-8');
                 const { data: frontmatter } = matter(fileContent);
@@ -22,7 +28,7 @@ export async function getOssMdFiles(prefix) {
                 const dataInfo = {
                     key: obj.name,
                     path: obj.name,
-                    fileName: fullFileName.replace('.md', ''),
+                    fileName: fullFileName.replace(/\.md$/i, ''),
                     category: frontmatter?.tags?.[0] || 'Uncategorized',
                     titleEn: frontmatter?.titleEn,
                     titleCh: frontmatter?.titleCh,
@@ -30,14 +36,12 @@ export async function getOssMdFiles(prefix) {
                 };
 
                 return { dataInfo, content: fileContent };
-            })
-        );
+            }));
+            files.push(...batch);
+        }
 
-        return (
-            files.filter(f => f.dataInfo.fileName !== '' && f.content !== '') ||
-            []
-        );
+        return files.filter(f => f.dataInfo.fileName !== '' && f.content !== '');
     } catch (error) {
-        throw new Error('Cannot get the whole files from oss');
+        throw new Error(`Cannot get Markdown files from OSS: ${prefix}`, { cause: error });
     }
 }

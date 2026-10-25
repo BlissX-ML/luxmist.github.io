@@ -14,33 +14,34 @@ import { getOssMdFiles } from '../../utils/oss/oss.md.js';
 export const mdFilesController = asyncHandler(async (req, res) => {
     const { routeId, secondRouteId } = req.params;
 
-    const getUrl = () => {
-        let first = null;
-
-        if (routeId === 'computer-related') {
-            first = 'computer-catalogue-repository';
-        } else if (routeId === 'eightpart') {
-            first = 'eightpart-essay-catalogue-repository';
-        } else if (routeId === 'chemistry-related') {
-            first = 'chemistry-catalogue-repository';
-        } else if (routeId === 'language-related') {
-            first = 'language-catalogue-repository';
-        }
-
-        const mix = `articles/${first}/`;
-        return !secondRouteId ? mix : `${mix}${secondRouteId}/`;
+    const directories = {
+        'computer-related': 'computer-catalogue-repository',
+        eightpart: 'eightpart-essay-catalogue-repository',
+        'chemistry-related': 'chemistry-catalogue-repository',
+        'language-related': 'language-catalogue-repository'
     };
-
-    const url = getUrl();
-    const info = await getOssMdFiles(url);
+    const first = Object.hasOwn(directories, routeId) && directories[routeId];
+    if (!first) {
+        return res.status(404).json({ message: 'Unknown repository category.' });
+    }
+    let second = secondRouteId;
+    if (routeId === 'eightpart' && second) second = second.toLowerCase();
+    if (routeId === 'computer-related' && second === 'js') second = 'javascript';
+    if (second && !/^[a-zA-Z0-9_-]+$/.test(second)) {
+        return res.status(400).json({ message: 'Invalid repository subcategory.' });
+    }
+    const url = `articles/${first}/${second ? `${second}/` : ''}`;
 
     try {
-        if (!info) {
-            throw new Error('Cannot get anything about Computer.');
-        }
+        const info = await getOssMdFiles(url);
         res.status(200).json(info);
     } catch (error) {
-        res.status(401);
-        throw new Error('Cannot get the whole lists with controller logics');
+        // SDK error messages can contain signed URLs; log diagnostic fields only.
+        const causes = [];
+        for (let cause = error; cause; cause = cause.cause) {
+            causes.push({ name: cause.name, code: cause.code, status: cause.status, requestId: cause.requestId });
+        }
+        console.error('Failed to fetch Markdown from OSS', { prefix: url, causes });
+        res.status(502).json({ message: 'Failed to fetch Markdown files from OSS.' });
     }
 });

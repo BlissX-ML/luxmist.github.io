@@ -1,5 +1,5 @@
 import classes from "./SidebarNavigation.module.scss";
-import { useAppSelector } from "../../store/reducer/hooks.js";
+import { useAppSelector } from "../../store/reducer/hooks.ts";
 
 import SidebarCatalogs from "../../components/sidebar/SidebarCatalogs.jsx";
 import SidebarNavList from "./SidebarNavList.jsx";

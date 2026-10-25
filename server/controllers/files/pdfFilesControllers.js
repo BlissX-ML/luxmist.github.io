@@ -17,12 +17,18 @@ export const pdfController = asyncHandler(async (req, res) => {
         const encodedFileName = encodeURIComponent(fileName);
         res.setHeader(
             'Content-Disposition',
-            `attachment; filename*=${encodedFileName}`
+            `attachment; filename="resume.pdf"; filename*=UTF-8''${encodedFileName}`
         );
+
+        res.setHeader('Cache-Control', 'no-store');
 
         res.send(content); // 直接发送二进制
     } catch (err) {
-        console.error(err);
+        console.error('Failed to download resume', {
+            code: err.cause?.code || err.code,
+            name: err.cause?.name || err.name,
+            requestId: err.cause?.requestId || err.requestId
+        });
         res.status(500).send('Failed to download PDF');
     }
 });

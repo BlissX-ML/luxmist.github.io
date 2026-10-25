@@ -1,7 +1,7 @@
 import { useDispatch } from 'react-redux';
 import classes from './SidebarToggleBtns.module.scss';
 
-import { useAppSelector } from '../../store/reducer/hooks.js';
+import { useAppSelector } from '../../store/reducer/hooks.ts';
 import { setSidebarActive } from '../../store/reducer/dropdownSidebar.js';
 
 import SidebarClose from '../../components/icons/SidebarClose';

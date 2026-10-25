@@ -1,6 +1,6 @@
 import classes from './RenderInitialContent.module.scss';
 
-import { useAppSelector } from '../../store/reducer/hooks.js';
+import { useAppSelector } from '../../store/reducer/hooks.ts';
 import NoContent from '../../components/icons/NoContent';
 
 // 这里的 files 是要能够返回文件数量的数据

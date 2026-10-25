@@ -1,102 +1,98 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { useSearchParams, useParams } from 'react-router-dom';
-import { useAppSelector } from '../../store/reducer/hooks';
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useParams } from "react-router-dom";
+import { useAppSelector } from "@/store/reducer/hooks.ts";
 
-import classes from './RenderMainContent.module.scss';
+import classes from "./RenderMainContent.module.scss";
 
-import RenderArticles from '../../components/markdown/RenderArticles.jsx';
-import Loading from '../../components/feedback/Loading';
-import RenderInitialContent from './RenderInitialContent';
-
-import { useMdDataApi } from '../../api/useMdDataApi.js';
-import RenderNoneContent from './RenderNoneContent';
+import RenderArticles from "../../components/markdown/RenderArticles.jsx";
+import Loading from "../../components/feedback/Loading";
+import { useMdDataApi } from "../../api/useMdDataApi.js";
+import RenderNoneContent from "./RenderNoneContent";
 
 export default function RenderMainContent() {
-    const [visibleCount, setVisibleCount] = useState(10);
+  const [visibleCount, setVisibleCount] = useState(10);
 
-    const { routeId, secondRouteId } = useParams();
+  const { routeId, secondRouteId } = useParams();
 
-    const hash = secondRouteId.toLowerCase() || '';
+  const hash = secondRouteId.toLowerCase() || "";
 
-    const { data: fileData, isLoad } = useMdDataApi(routeId, hash);
+  const { data: fileData, isLoad } = useMdDataApi(routeId, hash);
 
-    const { sidebarActive } = useAppSelector(state => state.dropdownSidebar);
+  const { sidebarActive } = useAppSelector((state) => state.dropdownSidebar);
 
-    // 简化 useMemo
-    const fileTitleContent = useMemo(
-        () =>
-            fileData?.map(({ dataInfo, content }) => ({
-                titleCh: dataInfo.titleCh,
-                key: dataInfo.key,
-                fileName: dataInfo.fileName,
-                content
-            })) || [],
-        [fileData]
+  // 简化 useMemo
+  const fileTitleContent = useMemo(
+    () =>
+      fileData?.map(({ dataInfo, content }) => ({
+        titleCh: dataInfo.titleCh,
+        key: dataInfo.key,
+        fileName: dataInfo.fileName,
+        content,
+      })) || [],
+    [fileData],
+  );
+
+  // 自动加载更多
+  useEffect(() => {
+    if (!fileTitleContent.length) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && visibleCount < fileTitleContent.length) {
+          setVisibleCount((prev) =>
+            Math.min(prev + 10, fileTitleContent.length),
+          );
+        }
+      },
+      { root: null, threshold: 1 },
     );
 
-    // 自动加载更多
-    useEffect(() => {
-        if (!fileTitleContent.length) return;
+    const sentinel = document.getElementById("load-more-sentinel");
+    if (sentinel) observer.observe(sentinel);
 
-        const observer = new IntersectionObserver(
-            ([entry]) => {
-                if (
-                    entry.isIntersecting &&
-                    visibleCount < fileTitleContent.length
-                ) {
-                    setVisibleCount(prev =>
-                        Math.min(prev + 10, fileTitleContent.length)
-                    );
-                }
-            },
-            { root: null, threshold: 1 }
-        );
+    return () => observer.disconnect();
+  }, [visibleCount, fileTitleContent.length]);
 
-        const sentinel = document.getElementById('load-more-sentinel');
-        if (sentinel) observer.observe(sentinel);
+  // 滚动到 hash 对应元素
+  useEffect(() => {
+    if (!hash) return;
 
-        return () => observer.disconnect();
-    }, [visibleCount, fileTitleContent.length]);
+    const scrollToHash = () => {
+      const el = document.getElementById(hash);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+        return true;
+      }
+      return false;
+    };
 
-    // 滚动到 hash 对应元素
-    useEffect(() => {
-        if (!hash) return;
+    const tryScroll = () => {
+      if (!scrollToHash()) {
+        requestAnimationFrame(tryScroll);
+      }
+    };
 
-        const scrollToHash = () => {
-            const el = document.getElementById(hash);
-            if (el) {
-                el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                return true;
-            }
-            return false;
-        };
+    tryScroll();
+  }, [hash, visibleCount]);
 
-        const tryScroll = () => {
-            if (!scrollToHash()) {
-                requestAnimationFrame(tryScroll);
-            }
-        };
+  return (
+    <section
+      className={`${classes.container} ${sidebarActive ? "" : classes.close}`}
+    >
+      {isLoad && <Loading />}
 
-        tryScroll();
-    }, [hash, visibleCount]);
+      {!isLoad && fileTitleContent.length === 0 && <RenderNoneContent />}
 
-    return (
-        <section
-            className={`${classes.container} ${sidebarActive ? '' : classes.close}`}
-        >
-            {isLoad && <Loading />}
+      {fileTitleContent.length > 0 &&
+        fileTitleContent.slice(0, visibleCount).map((file) => (
+          <RenderArticles
+            key={file.key}
+            articles={file}
+          />
+        ))}
 
-            {!isLoad && fileTitleContent.length === 0 && <RenderNoneContent />}
-
-            {fileTitleContent.length > 0 &&
-                fileTitleContent
-                    .slice(0, visibleCount)
-                    .map(file => (
-                        <RenderArticles key={file.key} articles={file} />
-                    ))}
-
-            {/* Intersection Observer 触发点 */}
-            <div id="load-more-sentinel" />
-        </section>
-    );
+      {/* Intersection Observer 触发点 */}
+      <div id="load-more-sentinel" />
+    </section>
+  );
 }

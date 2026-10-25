@@ -4,8 +4,15 @@ export async function getOssPdfFiles(prefix) {
     const client = await getOssClient();
 
     try {
-        const result = await client.list({ prefix, delimiter: '/' });
-        const objects = result.objects || [];
+        const objects = [];
+        let marker;
+        do {
+            const result = await client.list({ prefix, delimiter: '/', marker, 'max-keys': 1000 });
+            objects.push(...(result.objects || []).filter(object =>
+                /\.pdf$/i.test(object.name) && object.size > 0
+            ));
+            marker = result.isTruncated ? result.nextMarker : undefined;
+        } while (marker);
 
         if (!objects.length) {
             throw new Error('No PDF found in OSS');
@@ -23,6 +30,6 @@ export async function getOssPdfFiles(prefix) {
             content: pdf.content
         };
     } catch (error) {
-        throw new Error(`Failed to get PDF from OSS: ${error.message}`);
+        throw new Error('Failed to get PDF from OSS', { cause: error });
     }
 }
